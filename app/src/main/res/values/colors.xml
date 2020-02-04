@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimaryDark">#00574B</color>
+    <color name="colorAccent">#D81B60</color>
+
+    <color name="colorDigitalBtnNormal">#D0DCE3</color>
+    <color name="colorDigitalBtnPressed">#BED1DB</color>
+    <color name="colorDigitalBtnNormal1">#BED1DB</color>
+    <color name="colorDigitalBtnPressed1">#66A1B4</color>
+    <color name="colorDigitalBtnNormal2">#66A1B4</color>
+    <color name="colorDigitalBtnPressed2">#78CCE6</color>
+</resources>
