@@ -2,9 +2,14 @@ package com.example.calculator;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.TestLooperManager;
+import android.os.PersistableBundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -18,6 +23,26 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_about:
+            {
+                Intent i = new Intent(this, AboutActivity.class);
+                startActivity(i);
+            }
+            break;
+        }
+        return true;
     }
 
     public void onClick(View view) {
@@ -52,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
                 formula.setText("");
 
                 TextView result = (TextView) findViewById(R.id.result_area);
-                formula.setText("");
+                result.setText("");
             }
             break;
 
@@ -76,13 +101,65 @@ public class MainActivity extends AppCompatActivity {
                     TextView result = (TextView) findViewById(R.id.result_area);
                     result.setText(String.valueOf(res));
 
-                    formula.setText("");
+                    Animation fadeIn = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_in);
+                    result.startAnimation(fadeIn);
+
+                    Animation fadeOut = AnimationUtils.loadAnimation(MainActivity.this, R.anim.fade_out);
+                    result.startAnimation(fadeOut);
+
+                    fadeOut.setAnimationListener(new Animation.AnimationListener() {
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            TextView formula = (TextView) findViewById(R.id.formula_area);
+                            formula.setText("");
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+                    });
+
                 }
                 catch (SyntaxException e){
-                    Toast.makeText(MainActivity.this, "Error!", Toast.LENGTH_SHORT).show();
+                    String str = MainActivity.this.getString(R.string.error_info);
+                    Toast.makeText(MainActivity.this, str, Toast.LENGTH_SHORT).show();
                 }
             }
             break;
         }
     }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        TextView formula = (TextView) findViewById(R.id.formula_area);
+        String strFormula = formula.getText().toString();
+        outState.putString("KEY_FORMULA_AREA", strFormula);
+
+        TextView result = (TextView) findViewById(R.id.result_area);
+        String strResult = result.getText().toString();
+        outState.putString("KEY_RESULT_AREA", strResult);
+    }
+
+    @Override
+    public void onRestoreInstanceState(Bundle savedInstanceState, PersistableBundle persistentState) {
+        super.onRestoreInstanceState(savedInstanceState, persistentState);
+
+        TextView formula = (TextView) findViewById(R.id.formula_area);
+        String strFormula = savedInstanceState.getString("KEY_FORMULA_AREA");
+        formula.setText(strFormula);
+
+        TextView result = (TextView) findViewById(R.id.result_area);
+        String strResult = savedInstanceState.getString("KEY_RESULT_AREA");
+        result.setText(strResult);
+    }
+
+
 }
